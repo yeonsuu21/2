@@ -6,23 +6,23 @@ function App() {
   const [pattern, setPattern] = useState('');
 
   const handleClick = () => {
-    const newN = n + 1;
-    setN(newN);
-    drawingPattern(newN);
+    const K = n + 1;
+    setN(K);
+    drawingPattern(K);
   };
 
-  const drawingPattern = (newN) => {
+  const drawingPattern = (K) => {
     let result = '';
     // 상, 하로 나누어서 for문 작성
-    for (let i = 1; i <= newN; i++) {
+    for (let i = 1; i <= K; i++) {
       // 'r' 이 기준으로 처음부터 
       for (let j = 0; j < i; j++) {
         result += ' ';
       }
-      for (let j = newN - i; j >= 0; j--) {
+      for (let j = K - i; j >= 0; j--) {
         result += 'r';
       }
-      for (let j = newN - i; j > 0; j--) {
+      for (let j = K - i; j > 0; j--) {
         result += ' ';
       }
       for (let j = i-1; j >= 0; j--) {
@@ -31,8 +31,8 @@ function App() {
       result += '\n';
     }
 
-    for (let i = 1; i <= newN; i++) {
-      for (let j = newN-i; j >= 0; j--) {
+    for (let i = 1; i <= K; i++) {
+      for (let j = K-i; j >= 0; j--) {
         result += 'r';
       }
       for (let j = i; j > 0; j--) {
@@ -41,7 +41,7 @@ function App() {
       for (let j = i; j > 0; j--) {
         result += 'r';
       }
-      for (let j = newN - i; j > 0; j--) {
+      for (let j = K - i; j > 0; j--) {
         result += ' ';
       }
       result += '\n';
