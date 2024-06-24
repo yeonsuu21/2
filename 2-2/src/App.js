@@ -8,14 +8,14 @@ function App() {
   const handleClick = () => {
     const newN = n + 1;
     setN(newN);
-    generatePattern(newN);
+    drawingPattern(newN);
   };
 
-  const generatePattern = (newN) => {
+  const drawingPattern = (newN) => {
     let result = '';
     // 상, 하로 나누어서 for문 작성
     for (let i = 1; i <= newN; i++) {
-      // '⭐️' 이 기준으로 처음부터 
+      // 'r' 이 기준으로 처음부터 
       for (let j = 0; j < i; j++) {
         result += ' ';
       }
