@@ -1,7 +1,7 @@
 import './SelectOption.css';
 import React, { useState } from 'react';
 
-// JSON 데이터
+// JSON 데이터 예시
 const testData = {
   "_id": "621f2588d8d85b8d78eb3e64",
   "data": {
@@ -24,10 +24,6 @@ const testData = {
       },
       {
         "combination": ["라지", "하양"],
-        "remainCount": 0
-      },
-      {
-        "combination": ["라지", "빨강"],
         "remainCount": 0
       }
     ],
@@ -56,7 +52,7 @@ const SelectOption = () => {
   });
 
   const [selectedOptions, setSelectedOptions] = useState(initialState);
-
+console.log(selectedOptions)
   const handleChange = (event, title) => {
     setSelectedOptions(prevState => ({
       ...prevState,
@@ -66,28 +62,27 @@ const SelectOption = () => {
 
   const getOptionText = (option, title) => {
     if (title === titleList[0]) {
-      // 첫 번째 옵션(사이즈)의 경우
-      const matchedItems = testData.data.countList.filter(item => item.combination[0] === option);
-      const allOutOfStock = matchedItems.every(item => item.remainCount === 0);
+      // 첫 번째 옵션의 경우 (첫번째 옵션은 바로 품절이 나타나야함)
+      const matchedItem = testData.data.countList.filter(item => item.combination[0] === option);
+      const allOutOfStock = matchedItem.every(item => item.remainCount === 0);
 
       return allOutOfStock ? `${option} (품절)` : `${option}`;
     } else {
-      // 첫 번째 옵션이 아닌 경우
-      const selectedOtherOptions = titleList
-        .filter(t => t !== title)
-        .map(t => selectedOptions[t]);
+      // 첫 번째 옵션이 아닌 경우 (품절 or 갯수가 나타나야함)
+      // 현재 선택된 옵션을 제외한 나머지(이미 첫번째는 선택됨 .. 등)
+      const selectedOther = titleList.filter(t => t !== title).map(t => selectedOptions[t]);
 
       const matchedItem = testData.data.countList.find(item =>
-        item.combination.includes(option) && selectedOtherOptions.every(opt => item.combination.includes(opt))
+        item.combination.includes(option) && selectedOther.every(opt => item.combination.includes(opt))
       );
-
+        // matchedItem == true
       if (matchedItem) {
         return matchedItem.remainCount > 0 
           ? `${option} (${matchedItem.remainCount}개 구매가능)` 
           : `${option} (품절)`;
       }
-
-      return `${option}`;
+      //combination 없는 배열은 공백으로 처리
+      return '';
     }
   };
 
