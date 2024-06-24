@@ -20,10 +20,18 @@ const testData = {
       },
       {
         "combination": ["라지", "검정"],
-        "remainCount": 3
+        "remainCount": 0
+      },
+      {
+        "combination": ["라지", "하양"],
+        "remainCount": 0
+      },
+      {
+        "combination": ["라지", "빨강"],
+        "remainCount": 0
       }
     ],
-    "titleList":["사이즈","색상","끙"],
+    "titleList":["사이즈","색상"],
     "groupList": [
       {
         "title": "사이즈",
@@ -40,64 +48,71 @@ const testData = {
 const SelectOption = () => {
   const titleList = testData.data.titleList;
   const titleCount = testData.data.titleList.length;
-  //속성 초기화
+
+  // 속성 초기화
   const initialState = {};
-  for (let i = 1; i <= titleCount; i++) {
-    initialState[i] = '';
-  }
+  titleList.forEach(title => {
+    initialState[title] = '';
+  });
 
   const [selectedOptions, setSelectedOptions] = useState(initialState);
+
   const handleChange = (event, title) => {
-    setSelectedOptions({
-      ...selectedOptions,
+    setSelectedOptions(prevState => ({
+      ...prevState,
       [title]: event.target.value
-    });
+    }));
   };
 
   const getOptionText = (option, title) => {
-    const titleName = testData.data.titleList;
-    const otherTitle = title === titleName[0] ? titleName[1] : titleName[0];
-    console.log(otherTitle)
-    //othertitle -> 색상
-    const selectedOtherOption = selectedOptions[otherTitle];
-    const countList = testData.data.countList;
-    if (selectedOtherOption) {
-      const matchedItem = testData.data.countList.find(item => 
-        item.combination.includes(option) && item.combination.includes(selectedOtherOption)
+    if (title === titleList[0]) {
+      // 첫 번째 옵션(사이즈)의 경우
+      const matchedItems = testData.data.countList.filter(item => item.combination[0] === option);
+      const allOutOfStock = matchedItems.every(item => item.remainCount === 0);
+
+      return allOutOfStock ? `${option} (품절)` : `${option}`;
+    } else {
+      // 첫 번째 옵션이 아닌 경우
+      const selectedOtherOptions = titleList
+        .filter(t => t !== title)
+        .map(t => selectedOptions[t]);
+
+      const matchedItem = testData.data.countList.find(item =>
+        item.combination.includes(option) && selectedOtherOptions.every(opt => item.combination.includes(opt))
       );
+
       if (matchedItem) {
         return matchedItem.remainCount > 0 
           ? `${option} (${matchedItem.remainCount}개 구매가능)` 
           : `${option} (품절)`;
       }
-    }
-    else {
-      return`${option}`
+
+      return `${option}`;
     }
   };
-
 
   return (
     <div className="App">
       react를 활용한 selection 구현
       <div className='aline'>
-        {testData.data.groupList.map(data => (
+        {testData.data.groupList.map((data, index) => (
           <select
             key={data.title}
             value={selectedOptions[data.title]}
             onChange={(e) => handleChange(e, data.title)}
+            disabled={index > 0 && !selectedOptions[titleList[index - 1]]}
           >
             <option value="">{data.title}</option>
-            {data.options.map(option => (
-              <option key={option} value={option}>
-                {getOptionText(option, data.title)}
+            {data.options.map(select => (
+              <option key={select} value={select}>
+                {getOptionText(select, data.title)}
               </option>
             ))}
           </select>
         ))}
       </div>
-      {selectedOptions[titleList[0]] && selectedOptions[titleList[1]] && (
-        <p>{selectedOptions[titleList[0]]} / {selectedOptions[titleList[1]]}</p>
+      { ((selectedOptions[titleList[0]] && selectedOptions[titleList[1]] ) || selectedOptions[titleList[2]] )&& (
+        <p>{selectedOptions[titleList[0]]} / {selectedOptions[titleList[1]]} / {selectedOptions[titleList[2]]}  </p>
       )}
     </div>
   );
