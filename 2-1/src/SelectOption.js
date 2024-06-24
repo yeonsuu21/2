@@ -52,7 +52,6 @@ const SelectOption = () => {
   });
 
   const [selectedOptions, setSelectedOptions] = useState(initialState);
-console.log(selectedOptions)
   const handleChange = (event, title) => {
     setSelectedOptions(prevState => ({
       ...prevState,
