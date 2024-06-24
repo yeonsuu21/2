@@ -23,7 +23,7 @@ const testData = {
         "remainCount": 3
       }
     ],
-    "titleList":["사이즈","색상"],
+    "titleList":["사이즈","색상","끙"],
     "groupList": [
       {
         "title": "사이즈",
@@ -38,6 +38,7 @@ const testData = {
 };
 
 const SelectOption = () => {
+  const titleList = testData.data.titleList;
   const titleCount = testData.data.titleList.length;
   //속성 초기화
   const initialState = {};
@@ -95,8 +96,8 @@ const SelectOption = () => {
           </select>
         ))}
       </div>
-      {selectedOptions.사이즈 && selectedOptions.색상 && (
-        <p>{selectedOptions.사이즈} / {selectedOptions.색상}</p>
+      {selectedOptions[titleList[0]] && selectedOptions[titleList[1]] && (
+        <p>{selectedOptions[titleList[0]]} / {selectedOptions[titleList[1]]}</p>
       )}
     </div>
   );
